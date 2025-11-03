@@ -1,6 +1,33 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {User} from '../db/models/user.js'
+import {Post} from '../db/models/post.js'
+
+
+export async function updateUser(userID, { currentPassword, newUsername, newPassword }) {
+    const user = await User.findById(userID)
+    if (!user) return null
+
+    // Must verify password to authorize sensitive changes
+    const ok = await bcrypt.compare(currentPassword ?? '', user.password)
+    if (!ok) return null
+
+    const update = {}
+    if (newUsername) update.username = newUsername
+    if (newPassword) update.password = await bcrypt.hash(newPassword, 10)
+
+    return await User.findByIdAndUpdate(
+        userID,
+        { $set: update },
+        { new: true },
+    )
+}
+
+export async function deleteUser(userID) {
+  await Post.deleteMany({ author: userID })
+
+  return await User.deleteOne({ _id: userID })
+}
 
 
 export async function loginUser({username, password}) {

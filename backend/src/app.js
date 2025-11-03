@@ -8,7 +8,7 @@ app.use(bodyParser.json())
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:5173')
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS')
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     
 
@@ -20,6 +20,21 @@ app.use((req, res, next) => {
 
 postsRoutes(app)
 userRoutes(app)
+
+app.use((err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+        console.error('[JWT]', err.message) // e.g. "No authorization token was found", "jwt malformed", "invalid signature", "jwt expired"
+        return res.status(401).json({ error: err.message })
+    }
+    next(err)
+})
+
+app.use((req, _res, next) => {
+    if (req.method === 'PATCH' && req.path === '/api/v1/user') {
+        console.log('[AUTHZ]', req.headers.authorization)
+    }
+    next()
+})
 
 app.get('/', (req, res) => {
     res.send('Hello From Express!')

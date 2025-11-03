@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Signup } from './pages/Signup.jsx'
 import { AuthContentProvider } from './contexts/AuthContext.jsx'
 import { Login } from './pages/Login.jsx'
+import { Settings } from './pages/Settings.jsx'
 
 
 const router = createBrowserRouter([
@@ -18,7 +19,11 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element : <Login />,
-    }
+    },
+    {
+        path: "/settings",
+        element: <Settings />,
+    },
 ])
 
 const queryClient = new QueryClient()

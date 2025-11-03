@@ -27,4 +27,40 @@ export const getUserInfo = async (id) => {
     })
     return await res.json()
 }
-    
+
+
+export const updateUser = async ({ token, currentPassword, newUsername, newPassword }) => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}user`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ currentPassword, newUsername, newPassword }),
+    })
+    if (!res.ok) {
+        // server returns { error: '...' } on failure
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || 'Failed to update user')
+    }
+    // server returns { username }
+    return await res.json()
+}
+
+// DELETE current user (DELETE /api/v1/user)
+export const deleteUser = async (token) => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}user`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+    })
+    if (res.status === 204) return { ok: true } // No Content (success)
+
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || 'Failed to delete user')
+    }
+    // If your backend ever returns JSON on delete, this will handle it:
+    return await res.json().catch(() => ({ ok: true }))
+}
+
+
