@@ -6,6 +6,7 @@ import { PostFilter } from '../components/PostFilter.jsx'
 import { PostSorting } from '../components/PostSorting.jsx'
 import { useState } from 'react'
 import { Header } from '../components/Header.jsx'
+import styles from './Blog.module.css'
 
 
 export function Blog() {
@@ -16,33 +17,42 @@ export function Blog() {
             queryKey: ['posts', {author, sortBy, sortOrder} ],
             queryFn: () => getPosts({ author, sortBy, sortOrder }),
         })
-        
+
         const posts = postsQuery.data ?? []
     return (
-        <div style={{ padding: 8 }}>
+        <div className={styles.blogPage}>
             <Header />
-            <br />
-            <hr />
-            <br />
-            <CreatePost />
-            <br />
-            <hr />
-            Filter By:
-            <PostFilter
-            field='author'
-            value={author}
-            onChange={(value) => setAuthor(value)}
-            />
-            <br />
-            <PostSorting 
-            fields={['createdAt', 'updatedAt', 'title', 'descriptionLength']} 
-            value={sortBy}
-            onChange={(value) => setSortBy(value)}
-            orderValue={sortOrder}
-            onOrderChange={(orderValue) => setSortOrder(orderValue)}
-            />  
-            <hr />
-            <PostList posts={posts} />
+
+            <div className={styles.container}>
+                <section className={styles.createPostSection}>
+                    <h2 className={styles.sectionTitle}>Create New Post</h2>
+                    <CreatePost />
+                </section>
+
+                <div className={styles.toolbar}>
+                    <div className={styles.filterGroup}>
+                        <span className={styles.toolbarLabel}>Filter</span>
+                        <PostFilter
+                            field='author'
+                            value={author}
+                            onChange={(value) => setAuthor(value)}
+                        />
+                    </div>
+
+                    <div className={styles.sortGroup}>
+                        <span className={styles.toolbarLabel}>Sort</span>
+                        <PostSorting
+                            fields={['createdAt', 'updatedAt', 'title', 'descriptionLength']}
+                            value={sortBy}
+                            onChange={(value) => setSortBy(value)}
+                            orderValue={sortOrder}
+                            onOrderChange={(orderValue) => setSortOrder(orderValue)}
+                        />
+                    </div>
+                </div>
+
+                <PostList posts={posts} />
+            </div>
         </div>
     )
 }

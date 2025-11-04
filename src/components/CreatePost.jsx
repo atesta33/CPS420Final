@@ -2,6 +2,7 @@ import {useMutation, useQueryClient } from '@tanstack/react-query'
 import {useState} from 'react'
 import { createPost } from '../api/posts.js'
 import { useAuth } from '../contexts/AuthContext.jsx'
+import styles from './CreatePost.module.css'
 
 
 export function CreatePost() {
@@ -10,48 +11,66 @@ export function CreatePost() {
     const [contents, setContents] = useState('')
     const queryClient = useQueryClient()
     const createPostMutation = useMutation({
-    mutationFn: () => createPost(token, { title, contents}),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["posts"]})
-})
+        mutationFn: () => createPost(token, { title, contents}),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["posts"]})
+            setTitle('')
+            setContents('')
+        }
+    })
 
-const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("Submitting:", { title, contents })
-    createPostMutation.mutate({})
-}
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        createPostMutation.mutate({})
+    }
 
-if (!token) return <div>Please log in to create a post.</div>
+    if (!token) {
+        return (
+            <div className={styles.loginPrompt}>
+                Please log in to create a post.
+            </div>
+        )
+    }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="create-title">Title: </label>
-                <input 
-                type ='text' 
-                name='create-title' 
-                id='create-title' 
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                />   
+        <form onSubmit={handleSubmit} className={styles.createForm}>
+            <div className={styles.formGroup}>
+                <label htmlFor="create-title" className={styles.label}>Title</label>
+                <input
+                    type='text'
+                    name='create-title'
+                    id='create-title'
+                    placeholder='Give your post a great title...'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className={styles.titleInput}
+                />
             </div>
-            <br />
-            <textarea 
-                value={contents}
-                onChange={(e) => setContents(e.target.value)}
-            />
-            <br />
-            <br />
-            <input 
-            type='submit' 
-            value={createPostMutation.isPending ? 'Creating...' : 'Create'}
-            disabled={!title || createPostMutation.isPending}
-            />
-            {createPostMutation.isSuccess ? (
-                <>
-                <br />
-                Post Created Successfully!
-                </>
-            ) : null}
+
+            <div className={styles.formGroup}>
+                <label htmlFor="create-contents" className={styles.label}>Content</label>
+                <textarea
+                    id='create-contents'
+                    placeholder='Share your thoughts...'
+                    value={contents}
+                    onChange={(e) => setContents(e.target.value)}
+                    className={styles.contentTextarea}
+                />
+            </div>
+
+            <button
+                type='submit'
+                disabled={!title || createPostMutation.isPending}
+                className={styles.submitButton}
+            >
+                {createPostMutation.isPending ? 'Creating...' : 'Create Post'}
+            </button>
+
+            {createPostMutation.isSuccess && (
+                <div className={styles.successMessage}>
+                    ✓ Post created successfully!
+                </div>
+            )}
         </form>
     )
 }

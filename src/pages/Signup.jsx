@@ -3,6 +3,7 @@ import {useMutation} from '@tanstack/react-query'
 import {useNavigate} from 'react-router-dom'
 import {signup} from '../api/users.js'
 import { Link } from 'react-router-dom'
+import styles from './Auth.module.css'
 
 export function Signup() {
     const [username, setUsername] = useState('')
@@ -21,32 +22,60 @@ export function Signup() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Link to='/'>Back to main page</Link>
-            <div>
-                <label htmlFor='create-username'>Username: </label>
-                <input
-                    type='text'
-                    name='create-username'
-                    id='create-username'
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                <label htmlFor='create-password'>Password: </label>
-                <input
-                    type='password'
-                    name='create-password'
-                    id='create-password'
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+        <div className={styles.authPage}>
+            <div className={styles.authCard}>
+                <Link to='/' className={styles.backLink}>
+                    ← Back to main page
+                </Link>
+
+                <h1 className={styles.heading}>Create Account</h1>
+                <p className={styles.subheading}>Sign up to start sharing your thoughts</p>
+
+                <form onSubmit={handleSubmit} className={styles.form}>
+                    <div className={styles.formGroup}>
+                        <label htmlFor='create-username' className={styles.label}>
+                            Username
+                        </label>
+                        <input
+                            type='text'
+                            name='create-username'
+                            id='create-username'
+                            placeholder='Choose a username'
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className={styles.input}
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label htmlFor='create-password' className={styles.label}>
+                            Password
+                        </label>
+                        <input
+                            type='password'
+                            name='create-password'
+                            id='create-password'
+                            placeholder='Create a secure password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className={styles.input}
+                        />
+                    </div>
+
+                    <button
+                        type='submit'
+                        disabled={!username || !password || signupMutation.isPending}
+                        className={styles.submitButton}
+                    >
+                        {signupMutation.isPending ? 'Signing Up...' : 'Sign Up'}
+                    </button>
+                </form>
+
+                <div className={styles.switchLink}>
+                    Already have an account?
+                    <Link to='/login'>Log in</Link>
+                </div>
             </div>
-            <br />
-            <input
-                type='submit'
-                value={signupMutation.isPending ? 'Signing Up...' : 'Sign Up'}
-                disabled={!username || !password || signupMutation.isPending}
-            />
-        </form>
+        </div>
     )
 }
