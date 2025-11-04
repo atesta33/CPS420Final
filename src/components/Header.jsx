@@ -11,7 +11,7 @@ export function Header() {
         <header className={styles.header}>
             <div className={styles.headerContent}>
                 <Link to="/" className={styles.brand}>
-                    Blog
+                    TACBAY
                 </Link>
                 <nav className={styles.nav}>
                     {token ? (
