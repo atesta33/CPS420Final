@@ -27,7 +27,7 @@ export function CreatePost() {
     if (!token) {
         return (
             <div className={styles.loginPrompt}>
-                Please log in to create a post.
+                Please log in to create a listing.
             </div>
         )
     }
@@ -40,7 +40,7 @@ export function CreatePost() {
                     type='text'
                     name='create-title'
                     id='create-title'
-                    placeholder='Give your post a great title...'
+                    placeholder='Give your listing a title...'
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className={styles.titleInput}
@@ -51,7 +51,7 @@ export function CreatePost() {
                 <label htmlFor="create-contents" className={styles.label}>Content</label>
                 <textarea
                     id='create-contents'
-                    placeholder='Share your thoughts...'
+                    placeholder='Share your listing...'
                     value={contents}
                     onChange={(e) => setContents(e.target.value)}
                     className={styles.contentTextarea}
@@ -63,7 +63,7 @@ export function CreatePost() {
                 disabled={!title || createPostMutation.isPending}
                 className={styles.submitButton}
             >
-                {createPostMutation.isPending ? 'Creating...' : 'Create Post'}
+                {createPostMutation.isPending ? 'Creating...' : 'Create Listing'}
             </button>
 
             {createPostMutation.isSuccess && (
