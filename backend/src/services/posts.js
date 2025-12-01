@@ -74,6 +74,12 @@ export async function listPostsByTag(tags, options) {
   return await listPosts({ tags }, options);
 }
 
+export async function listPostsByBidder(bidderId) {
+  return await Post.find({
+    "bids.bidder": bidderId,
+  }).sort({ updatedAt: -1 });
+}
+
 export async function getPostById(postID) {
   return await Post.findById(postID);
 }
@@ -148,9 +154,17 @@ export async function placeBidOnPost(userId, postId, rawAmount) {
     throw error;
   }
 
+  // ensure user has tokens field (for legacy users)
+  if (user.tokens === undefined || user.tokens === null) {
+    user.tokens = 100;
+    await user.save();
+  }
+
   // check tokens
   if (user.tokens < amount) {
-    const error = new Error("Not enough tokens");
+    const error = new Error(
+      `Not enough tokens. You have ${user.tokens}, need ${amount}`,
+    );
     error.status = 400;
     throw error;
   }
