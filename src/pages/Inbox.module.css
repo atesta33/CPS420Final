@@ -1,0 +1,62 @@
+.inboxPage {
+  padding: 2rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.noConvo,
+.notice {
+  font-size: 1rem;
+  color: var(--color-text-light);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.convoItem {
+  padding: 14px 18px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: var(--color-text-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.convoItem:hover {
+  background: var(--color-bg-tertiary);
+}
+
+.preview {
+  margin-top: 6px;
+  color: var(--color-text-secondary);
+}
+
+.time {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.backBtn {
+  font-size: 1rem;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.backBtn:hover {
+  text-decoration: underline;
+}
