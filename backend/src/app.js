@@ -1,7 +1,8 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import { userRoutes } from './routes/users.js'
-import { postsRoutes } from './routes/posts.js'   // <-- ADD THIS
+import { postsRoutes } from './routes/posts.js'
+import { tournamentsRoutes } from './routes/tournaments.js'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 import { handleSocket } from './socket.js'
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
 
 userRoutes(app)
 postsRoutes(app)
+tournamentsRoutes(app)
 app.use("/api/conversations", conversationsRoutes)
 
 app.get('/', (req, res) => {

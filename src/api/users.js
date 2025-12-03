@@ -1,8 +1,8 @@
-export const signup = async ({ username, password }) => {
+export const signup = async ({ username, password, role }) => {
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}user/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username, password, role }),
   });
   if (!res.ok) throw new Error("Failed to signup");
   return await res.json();

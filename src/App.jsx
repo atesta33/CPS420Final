@@ -1,14 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { Blog } from "./pages/Blog.jsx";
+import { Tournaments } from "./pages/Tournaments.jsx";
 import { Signup } from "./pages/Signup.jsx";
 import { Login } from "./pages/Login.jsx";
 import { Settings } from "./pages/Settings.jsx";
-import { PostDetail } from "./pages/PostDetail.jsx";
-import { BuyTokens } from "./pages/BuyTokens.jsx";
-import { MyListings } from "./pages/MyListings.jsx";
-import { MyBids } from "./pages/MyBids.jsx";
+import { TournamentDetail } from "./pages/TournamentDetail.jsx";
+import { MyTournaments } from "./pages/MyTournaments.jsx";
+import { MyRegistrations } from "./pages/MyRegistrations.jsx";
 import Inbox from "./pages/Inbox.jsx";
 import DMChat from "./pages/DMChat.jsx";
 
@@ -20,7 +19,7 @@ const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Blog />,
+    element: <Tournaments />,
   },
   {
     path: "/signup",
@@ -35,16 +34,12 @@ const router = createBrowserRouter([
     element: <Settings />,
   },
   {
-    path: "/buy-tokens",
-    element: <BuyTokens />,
+    path: "/my-tournaments",
+    element: <MyTournaments />,
   },
   {
-    path: "/my-listings",
-    element: <MyListings />,
-  },
-  {
-    path: "/my-bids",
-    element: <MyBids />,
+    path: "/my-registrations",
+    element: <MyRegistrations />,
   },
   {
     path: "/dm/:userId",
@@ -55,8 +50,8 @@ const router = createBrowserRouter([
     element: <Inbox />,
   },
   {
-    path: "/posts/:id",
-    element: <PostDetail />,
+    path: "/tournaments/:id",
+    element: <TournamentDetail />,
   },
 ]);
 

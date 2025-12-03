@@ -35,31 +35,33 @@ export async function loginUser({ username, password }) {
   if (!isPasswordCorrect) {
     throw new Error("Invalid Password");
   }
-  const token = jwt.sign({ sub: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "24h",
-  });
+  const token = jwt.sign(
+    { sub: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "24h",
+    },
+  );
   return { token };
 }
 
-export async function createUser({ username, password }) {
+export async function createUser({ username, password, role }) {
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = new User({ username, password: hashedPassword });
+  const user = new User({
+    username,
+    password: hashedPassword,
+    role: role || "PLAYER",
+  });
   return await user.save();
 }
 
 export async function getUserInfoById(userId) {
   try {
     const user = await User.findById(userId);
-    if (!user) return { username: userId, tokens: 0 };
+    if (!user) return { username: userId, role: "PLAYER" };
 
-    // ensure user has tokens field (for legacy users)
-    if (user.tokens === undefined || user.tokens === null) {
-      user.tokens = 100;
-      await user.save();
-    }
-
-    return { username: user.username, tokens: user.tokens ?? 0 };
+    return { username: user.username, role: user.role };
   } catch (error) {
-    return { username: userId, tokens: 0 };
+    return { username: userId, role: "PLAYER" };
   }
 }
