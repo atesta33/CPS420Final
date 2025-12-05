@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getTournamentById, registerForTournament, withdrawFromTournament } from "../api/tournaments.js";
+import { getTournamentById, registerForTournament, withdrawFromTournament, joinAsSpectator, leaveAsSpectator } from "../api/tournaments.js";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../components/User.jsx";
@@ -75,6 +75,28 @@ export function TournamentDetail() {
     },
   });
 
+  const spectatorMutation = useMutation({
+    mutationFn: () => joinAsSpectator(token, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tournament", id] });
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+    },
+    onError: (err) => {
+      alert(err.message);
+    },
+  });
+
+  const unspectateMutation = useMutation({
+    mutationFn: () => leaveAsSpectator(token, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tournament", id] });
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+    },
+    onError: (err) => {
+      alert(err.message);
+    },
+  });
+
   const handleRegister = () => {
     registerMutation.mutate();
   };
@@ -83,6 +105,14 @@ export function TournamentDetail() {
     if (confirm("Are you sure you want to withdraw from this tournament?")) {
       withdrawMutation.mutate();
     }
+  };
+
+  const handleJoinSpectator = () => {
+    spectatorMutation.mutate();
+  };
+
+  const handleLeaveSpectator = () => {
+    unspectateMutation.mutate();
   };
 
   useEffect(() => {
@@ -143,6 +173,7 @@ export function TournamentDetail() {
     maxParticipants,
     numberOfRounds,
     participants = [],
+    spectators = [],
     status,
     startTime,
     registrationDeadline,
@@ -152,6 +183,8 @@ export function TournamentDetail() {
   const activeParticipants = participants.filter((p) => p.status === "REGISTERED");
   const isUserRegistered =
     userId && activeParticipants.some((p) => p.player === userId || p.player?._id === userId);
+  const isUserSpectator =
+    userId && spectators.some((s) => s.user === userId || s.user?._id === userId);
 
   return (
     <div className={styles.detailPage}>
@@ -216,6 +249,33 @@ export function TournamentDetail() {
                         {participant.registeredAt && (
                           <div className={styles.bidTime}>
                             Registered: {new Date(participant.registeredAt).toLocaleString()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className={styles.bidHistory}>
+              <h2 className={styles.bidHistoryTitle}>
+                Spectators ({spectators.length})
+              </h2>
+
+              {spectators.length === 0 ? (
+                <div className={styles.noBids}>No spectators yet.</div>
+              ) : (
+                <div className={styles.bidList}>
+                  {spectators.map((spectator, index) => (
+                    <div key={index} className={styles.bidItem}>
+                      <div className={styles.bidItemLeft}>
+                        <div className={styles.bidder}>
+                          <User id={spectator.user} />
+                        </div>
+                        {spectator.joinedAt && (
+                          <div className={styles.bidTime}>
+                            Joined: {new Date(spectator.joinedAt).toLocaleString()}
                           </div>
                         )}
                       </div>
@@ -328,6 +388,31 @@ export function TournamentDetail() {
                       {withdrawMutation.isPending ? "Withdrawing..." : "Withdraw"}
                     </button>
                   )}
+                </div>
+              )}
+
+              {isLoggedIn && !isUserRegistered && !isUserSpectator && (
+                <button
+                  onClick={handleJoinSpectator}
+                  disabled={spectatorMutation.isPending}
+                  className={styles.bidButton}
+                  style={{ marginTop: "10px", backgroundColor: "#6B7280" }}
+                >
+                  {spectatorMutation.isPending ? "Joining..." : "Join as Spectator"}
+                </button>
+              )}
+
+              {isLoggedIn && isUserSpectator && (
+                <div>
+                  <div className={styles.successMessage}>You are a spectator</div>
+                  <button
+                    onClick={handleLeaveSpectator}
+                    disabled={unspectateMutation.isPending}
+                    className={styles.bidButton}
+                    style={{ marginTop: "10px", backgroundColor: "#EF4444" }}
+                  >
+                    {unspectateMutation.isPending ? "Leaving..." : "Leave Spectators"}
+                  </button>
                 </div>
               )}
             </div>

@@ -121,3 +121,41 @@ export const withdrawFromTournament = async (token, tournamentId) => {
 
   return res.json();
 };
+
+export const joinAsSpectator = async (token, tournamentId) => {
+  const url = new URL(`tournaments/${tournamentId}/spectate`, import.meta.env.VITE_BACKEND_URL);
+
+  const res = await fetch(url.toString(), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    throw new Error(errorBody.error || "Failed to join as spectator");
+  }
+
+  return res.json();
+};
+
+export const leaveAsSpectator = async (token, tournamentId) => {
+  const url = new URL(`tournaments/${tournamentId}/unspectate`, import.meta.env.VITE_BACKEND_URL);
+
+  const res = await fetch(url.toString(), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    throw new Error(errorBody.error || "Failed to leave as spectator");
+  }
+
+  return res.json();
+};

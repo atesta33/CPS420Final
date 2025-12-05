@@ -8,6 +8,8 @@ import {
   deleteTournament,
   registerForTournament,
   withdrawFromTournament,
+  joinAsSpectator,
+  leaveAsSpectator,
 } from "../services/tournaments.js";
 
 import { requireAuth } from "../middleware/jwt.js";
@@ -100,6 +102,36 @@ export function tournamentsRoutes(app) {
       return res.json(tournament);
     } catch (error) {
       console.error("Error withdrawing from tournament:", error);
+      if (error.status) {
+        return res.status(error.status).json({ error: error.message });
+      }
+      return res.status(500).end();
+    }
+  });
+
+  app.post("/api/v1/tournaments/:id/spectate", requireAuth, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const tournament = await joinAsSpectator(req.auth.sub, id);
+      return res.json(tournament);
+    } catch (error) {
+      console.error("Error joining as spectator:", error);
+      if (error.status) {
+        return res.status(error.status).json({ error: error.message });
+      }
+      return res.status(500).end();
+    }
+  });
+
+  app.post("/api/v1/tournaments/:id/unspectate", requireAuth, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const tournament = await leaveAsSpectator(req.auth.sub, id);
+      return res.json(tournament);
+    } catch (error) {
+      console.error("Error leaving as spectator:", error);
       if (error.status) {
         return res.status(error.status).json({ error: error.message });
       }

@@ -228,3 +228,88 @@ export async function withdrawFromTournament(userId, tournamentId) {
 
   return updatedTournament;
 }
+
+export async function joinAsSpectator(userId, tournamentId) {
+  const tournament = await Tournament.findById(tournamentId);
+  if (!tournament) {
+    const error = new Error("Tournament not found");
+    error.status = 404;
+    throw error;
+  }
+
+  const alreadySpectator = tournament.spectators?.some(
+    (s) => s.user.toString() === userId,
+  );
+
+  if (alreadySpectator) {
+    const error = new Error("Already joined as spectator");
+    error.status = 400;
+    throw error;
+  }
+
+  const alreadyParticipant = tournament.participants.some(
+    (p) => p.player.toString() === userId && p.status === "REGISTERED",
+  );
+
+  if (alreadyParticipant) {
+    const error = new Error("You are already registered as a participant");
+    error.status = 400;
+    throw error;
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    const error = new Error("User not found");
+    error.status = 404;
+    throw error;
+  }
+
+  if (!tournament.spectators) {
+    tournament.spectators = [];
+  }
+
+  tournament.spectators.push({
+    user: user._id,
+  });
+
+  await tournament.save();
+
+  const updatedTournament = await Tournament.findById(tournament._id)
+    .populate("organizer", "username")
+    .populate("participants.player", "username")
+    .populate("spectators.user", "username")
+    .lean();
+
+  return updatedTournament;
+}
+
+export async function leaveAsSpectator(userId, tournamentId) {
+  const tournament = await Tournament.findById(tournamentId);
+  if (!tournament) {
+    const error = new Error("Tournament not found");
+    error.status = 404;
+    throw error;
+  }
+
+  const spectatorIndex = tournament.spectators?.findIndex(
+    (s) => s.user.toString() === userId,
+  );
+
+  if (spectatorIndex === -1 || spectatorIndex === undefined) {
+    const error = new Error("Not joined as spectator");
+    error.status = 400;
+    throw error;
+  }
+
+  tournament.spectators.splice(spectatorIndex, 1);
+
+  await tournament.save();
+
+  const updatedTournament = await Tournament.findById(tournament._id)
+    .populate("organizer", "username")
+    .populate("participants.player", "username")
+    .populate("spectators.user", "username")
+    .lean();
+
+  return updatedTournament;
+}

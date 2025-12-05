@@ -23,6 +23,23 @@ const participantSchema = new Schema(
   },
 );
 
+const spectatorSchema = new Schema(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+    joinedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    _id: false,
+  },
+);
+
 const tournamentSchema = new Schema(
   {
     name: { type: String, required: true },
@@ -60,6 +77,8 @@ const tournamentSchema = new Schema(
     },
 
     participants: [participantSchema],
+
+    spectators: [spectatorSchema],
 
     status: {
       type: String,
