@@ -8,11 +8,10 @@ import styles from './Auth.module.css'
 export function Signup() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [role, setRole] = useState('PLAYER')
     const navigate = useNavigate()
 
     const signupMutation = useMutation({
-        mutationFn: () => signup({ username, password, role }),
+        mutationFn: () => signup({ username, password }),
         onSuccess: () => navigate('/login'),
         onError: () => alert('Failed To Sign Up')
     })
@@ -61,22 +60,6 @@ export function Signup() {
                             onChange={(e) => setPassword(e.target.value)}
                             className={styles.input}
                         />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <label htmlFor='create-role' className={styles.label}>
-                            Account Type
-                        </label>
-                        <select
-                            id='create-role'
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            className={styles.input}
-                        >
-                            <option value='PLAYER'>Player - Participate in tournaments</option>
-                            <option value='ORGANIZER'>Organizer - Create and manage tournaments</option>
-                            <option value='SPECTATOR'>Spectator - Watch and follow tournaments</option>
-                        </select>
                     </div>
 
                     <button
