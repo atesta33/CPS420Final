@@ -21,7 +21,7 @@ Welcome to the Chess Tournament Platform! This guide will help you navigate and 
 
 ## Instalation Guide
 
-To install the Chess Tournament Mangement system you have to do an npm install to download node modules. Then install Docker Desktop and MongoDB for your database. Then make sure Docker is open and mongoDB is running then do a npm run dev on both the backend and the main file.
+To install the Chess Tournament Management system you have to do an npm install to download node modules. Then install Docker Desktop and MongoDB for your database. Then make sure Docker is open and mongoDB is running then do a npm run dev on both the backend and the main file.
 
 ## Getting Started
 
