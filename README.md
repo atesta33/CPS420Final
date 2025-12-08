@@ -15,6 +15,7 @@ Welcome to the Chess Tournament Platform! This guide will help you navigate and 
 9. [Direct Messaging](#direct-messaging)
 10. [Account Settings](#account-settings)
 11. [Tournament Formats and Time Controls](#tournament-formats-and-time-controls)
+12. [Tech Stack](#tech-stack)
 
 ---
 
@@ -441,6 +442,10 @@ If you encounter any issues or have questions:
 | Update account | Settings |
 | Join tournament | Tournament Detail > Register for Tournament |
 | Spectate tournament | Tournament Detail > Join as Spectator |
+
+## Tech Stack
+
+The stack consists of MongoDB, Express, React, and Node.js, all written in JavaScript end to end. On the frontend, we used React to build an interactive client-side interface that runs in the browser and communicates with the backend using HTTP requests. For the backend, we used Node.js paired with Express to create a RESTful API that handles routing, user requests, authentication, and all communication with the database. We used MongoDB as our NoSQL database, storing data in flexible JSON-like documents rather than rigid relational tables, which makes development faster and more scalable. All three components are containerized using Docker Desktop so they run in isolated environments with consistent versions and zero dependency conflicts. We can spin up the full application with a single command, and each container is networked internally so the backend communicates with MongoDB using Docker service names rather than localhost. This lets us develop, debug, and deploy in the same environment, improving reliability and keeping things more professional than running everything directly on the host machine.
 
 ---
 
