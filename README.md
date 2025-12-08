@@ -4,18 +4,23 @@ Welcome to the Chess Tournament Platform! This guide will help you navigate and 
 
 ## Table of Contents
 
-1. [Getting Started](#getting-started)
-2. [Creating an Account](#creating-an-account)
-3. [Browsing Tournaments](#browsing-tournaments)
-4. [Creating a Tournament](#creating-a-tournament)
-5. [Joining Tournaments](#joining-tournaments)
-6. [Spectating Tournaments](#spectating-tournaments)
-7. [Managing Your Tournaments](#managing-your-tournaments)
-8. [Direct Messaging](#direct-messaging)
-9. [Account Settings](#account-settings)
-10. [Tournament Formats and Time Controls](#tournament-formats-and-time-controls)
+1. [Installation Guide](#installation-guide)
+2. [Getting Started](#getting-started)
+3. [Creating an Account](#creating-an-account)
+4. [Browsing Tournaments](#browsing-tournaments)
+5. [Creating a Tournament](#creating-a-tournament)
+6. [Joining Tournaments](#joining-tournaments)
+7. [Spectating Tournaments](#spectating-tournaments)
+8. [Managing Your Tournaments](#managing-your-tournaments)
+9. [Direct Messaging](#direct-messaging)
+10. [Account Settings](#account-settings)
+11. [Tournament Formats and Time Controls](#tournament-formats-and-time-controls)
 
 ---
+
+## Instalation Guide
+
+To install the Chess Tournament Mangement system you have to do an npm install to download node modules. Then install Docker Desktop and MongoDB for your database. Then make sure Docker is open and mongoDB is running then do a npm run dev on both the backend and the main file.
 
 ## Getting Started
 
